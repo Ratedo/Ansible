@@ -1,0 +1,49 @@
+- name: Установка порта и создание файла
+  hosts: all
+  become: yes
+  vars:
+    nginx_port: 8080
+    nginx_dir: "/var/www/mai_failiki"
+
+  tasks:
+    - name: Установка nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Проверка директории
+      file:
+        path: "{{ nginx_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Создание файла
+      copy:
+        dest: "{{ nginx_dir }}/okak.txt"
+        content: "HELLO!"
+        force: no 
+        mode: '0644'
+
+    - name: Развертывание nginx из конфига
+      template:
+        src: confa_nginx.conf
+        dest: /etc/nginx/sites-available/file_server
+      notify: reload nginx
+
+    - name: Конфигурация
+      file:
+        src: /etc/nginx/sites-available/file_server
+        dest: /etc/nginx/sites-enabled/file_server
+        state: link
+
+    - name: Удаление дефолтного конфига nginx
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: reload nginx
+
+  handlers:
+    - name: reload nginx
+      service:
+        name: nginx
+        state: reloaded

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+read -p "IP-адрес сервера: " IP_ADDR
+
+echo "Генерация SSH-ключа"
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
+
+echo "Копирование ключа на $IP_ADDR"
+ssh-copy-id root@$IP_ADDR
+
+echo "Настройка хостов - /etc/ansible/hosts"
+sudo mkdir -p /etc/ansible
+echo -e "[servers]\nserver1 ansible_host=$IP_ADDR\n\n[servers:vars]\nansible_python_interpreter=/usr/bin/python3" | sudo tee /etc/ansible/hosts > /dev/null
+
+echo "Проверка связи"
+ansible -m ping all
