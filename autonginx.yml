@@ -2,7 +2,7 @@
   hosts: all
   become: yes
   vars:
-    nginx_port: 8080
+    nginx_port: 80
     nginx_dir: "/var/www/mai_failiki"
 
   tasks:
@@ -20,7 +20,7 @@
     - name: Создание файла
       copy:
         dest: "{{ nginx_dir }}/okak.txt"
-        content: "HELLO!"
+        content: "HELLO! KAK TI?"
         force: no 
         mode: '0644'
 

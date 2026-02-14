@@ -15,7 +15,7 @@ chmod +x razvert.ssh && ./razvert.ssh
 
 После этого нужно запустить файлик yml с указанием порта (по умолчанию 80):
 ```bash
-ansible-playbook autonginx.yml -e "nginx_port=9000"
+ansible-playbook autonginx.yml -e "nginx_port=7777"
 ```
 
 
